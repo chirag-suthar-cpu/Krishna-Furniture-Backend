@@ -285,7 +285,7 @@ connectDB();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:3000', // frontend URL
+  origin: 'https://krishna-furniture-frontend.vercel.app', // Vercel frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
