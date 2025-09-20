@@ -6,10 +6,10 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: process.env.EMAIL_PORT == '465', // 465 = true, 587 = false
+  secure: process.env.EMAIL_PORT == '465', // true for 465
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Gmail App Password recommended
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -25,7 +25,7 @@ exports.createContact = async (req, res) => {
     const contact = new Contact({ name, email, phone, service, message });
     await contact.save();
 
-    // Prepare email
+    // Send email if TARGET_EMAIL is set
     const target = process.env.TARGET_EMAIL;
     if (target) {
       const mailOptions = {
@@ -45,8 +45,8 @@ exports.createContact = async (req, res) => {
         await transporter.sendMail(mailOptions);
         console.log('Contact email sent');
       } catch (err) {
-          console.error("❌ Email send failed:", err);
-        }
+        console.error("❌ Email send failed:", err);
+      }
     }
 
     return res.status(201).json({ success: true, message: 'Contact saved and email sent' });
